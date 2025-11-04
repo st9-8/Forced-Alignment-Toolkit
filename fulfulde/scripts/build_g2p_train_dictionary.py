@@ -79,7 +79,7 @@ def extract_words_from_file(filename: str) -> list:
     return word_list
 
 
-def save_word_list_to_file(words: list, input_filename: str):
+def save_word_list_to_file(words: list, output_filename: str):
     """
         Save word list in a file for the corresponding format
     """
@@ -88,7 +88,7 @@ def save_word_list_to_file(words: list, input_filename: str):
         return
 
     # Determine the output filename based on the input filename and format
-    base_name, ext = os.path.splitext(input_filename)
+    base_name, ext = os.path.splitext(output_filename)
     output_filename = f"{base_name}_ipa{ext}"
 
     # Determine the format based on file extension
@@ -109,6 +109,12 @@ def save_word_list_to_file(words: list, input_filename: str):
                 writer = csv.DictWriter(f, fieldnames=fieldnames, extrasaction='ignore', delimiter=';')
                 writer.writeheader()
                 writer.writerows(words)
+        elif fmt == 'dict':
+            fieldnames = list(words[0].keys()) if words else []
+
+            with open(output_filename, 'w', newline='', encoding='utf-8') as f:
+                writer = csv.DictWriter(f, fieldnames=fieldnames, extrasaction='ignore', delimiter='\t')
+                writer.writerows(words)
         else:
             print(f"Unsupported format '{fmt}' for saving.", file=sys.stderr)
             return
@@ -128,21 +134,27 @@ def main():
         description="Convert a word list file (CSV or JSON) to include IPA transcriptions using Epitran."
     )
     parser.add_argument(
-        '-f', '--filename',
+        '-f', '--input_file',
         type=str,
-        help='The path to the input CSV or JSON file (e.g., output.csv or output.json).'
+        help='The path to the input CSV, JSON, DICT file (e.g., vocabulary.csv or vocabulary.json).'
+    )
+
+    parser.add_argument(
+        '-o', '--output_file',
+        type=str,
+        help='The path to the output file (Can be *.csv, *.json or *.dict [MFA compatible])'
     )
 
     args = parser.parse_args()
 
     # 1. Extract words from file
-    word_data = extract_words_from_file(args.filename)
+    word_data = extract_words_from_file(args.input_file)
 
     # 2. Convert words to IPA
     ipa_data = convert_wordlist_to_ipa(word_data)
 
     # 3. Save the result
-    save_word_list_to_file(ipa_data, args.filename)
+    save_word_list_to_file(ipa_data, args.output_file)
 
 
 if __name__ == "__main__":
