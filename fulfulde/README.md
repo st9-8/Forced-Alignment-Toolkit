@@ -5,7 +5,7 @@ Aligner (MFA).
 
 ## Available Tools
 
-- `scrape_fulfulde_from_webonary.py` – harvests lexical entries
+- `scripts/scrape_fulfulde_from_webonary.py` – harvests lexical entries
   from [Webonary](https://www.webonary.org/fulfuldeburkina/browse/fulfulde-english/?key=ffm-Latn-BF&letter=a&lang=en) to
   bootstrap the pronunciation dictionary.
 
@@ -19,15 +19,17 @@ Aligner (MFA).
       --include-translation
                             Include French and English translations in the output (default: False/only source text).
     ```
-- `build_g2p_train_dictionary.py` - convert words list in Fulfulde to IPA
+- `scripts/build_g2p_train_dictionary.py` - convert words list in Fulfulde to IPA
 
   ```commandline
     usage: build_g2p_train_dictionary.py [-h] [-f FILENAME]
     Convert a word list file (CSV or JSON) to include IPA transcriptions using Epitran.
     options:
       -h, --help            show this help message and exit
-      -f FILENAME, --filename FILENAME
-                            The path to the input CSV or JSON file (e.g., output.csv or output.json)
+      -f INPUT_FILENAME, --input_file INPUT_FILENAME
+                            The path to the input CSV, JSON file (e.g., input.csv or input.json)
+      -o OUTPUT_FILENAME --output_file OUTPUT_FILENAME
+                            The path to the output CSV, JSON, or DICT (e.g., lexicon.dict[MFA compatible], lexicon.csv)
     ```
 
 ## Suggested Workflow
